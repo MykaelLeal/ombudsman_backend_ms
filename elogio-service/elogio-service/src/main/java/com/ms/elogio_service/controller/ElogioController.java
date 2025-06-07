@@ -37,79 +37,87 @@ public class ElogioController {
 
     @Operation(summary = "Criar um elogio", description = "Cria um novo elogio com título, descrição e data atual.")
     @ApiResponses(value = {
-    @ApiResponse(responseCode = "201", description = "Elogio criado com sucesso."),
-    @ApiResponse(responseCode = "400", description = "Dados inválidos.")})
+        @ApiResponse(responseCode = "201", description = "Elogio criado com sucesso."),
+        @ApiResponse(responseCode = "400", description = "Dados inválidos."),
+        @ApiResponse(responseCode = "401", description = "Não autorizado, token inválido ou ausente.")
+    })
     @PostMapping("/create")
-    public ResponseEntity<ElogioResponseDto> createElogio(@Valid @RequestBody ElogioRequestDto elogioDTO) {
-        Elogio elogio = elogioService.createElogio(elogioDTO);
+    public ResponseEntity<ElogioResponseDto> createElogio(@Valid @RequestBody ElogioRequestDto elogioDto) {
+
+        Elogio elogio = elogioService.createElogio(elogioDto);
+
         if (elogio == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ElogioResponseDto("Dados inválidos.", null));
+                    .body(new ElogioResponseDto("Dados inválidos.", null));
         }
-
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(new ElogioResponseDto("Elogio criado com sucesso.", elogio));
+                .body(new ElogioResponseDto("Elogio criado com sucesso.", elogio));
     }
-
 
 
     @Operation(summary = "Listar todos os elogios.", description = "Retorna a lista de todos os elogios.")
     @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Elogios listados com sucesso."),
-    @ApiResponse(responseCode = "404", description = "Nenhum elogio encontrado.")})
+        @ApiResponse(responseCode = "200", description = "Elogios listados com sucesso."),
+        @ApiResponse(responseCode = "404", description = "Nenhum elogio encontrado.")})
     @GetMapping("/")
     public ResponseEntity<ElogioListResponseDto> getAllElogios() {
-       List<Elogio> elogios = elogioService.getAllElogios();
-        if (elogios.isEmpty()) {
+
+         List<Elogio> elogios = elogioService.getAllElogios();
+
+         if (elogios.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new ElogioListResponseDto("Nenhum elogio encontrado.", elogios));
         }
-
         return ResponseEntity.ok(new ElogioListResponseDto("Elogios listados com sucesso.", elogios));
-    }
+
+        }
 
 
 
     @Operation(summary = "Buscar elogio por ID", description = "Retorna um elogio específico pelo seu ID.")
     @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Elogio encontrado com sucesso."),
-    @ApiResponse(responseCode = "404", description = "Elogio não encontrado.")})
+        @ApiResponse(responseCode = "200", description = "Elogio encontrado com sucesso."),
+        @ApiResponse(responseCode = "404", description = "Elogio não encontrado.")})
     @GetMapping("/{id}")
     public ResponseEntity<ElogioResponseDto> getElogioById(@PathVariable UUID id) {
+
         Optional<Elogio> elogioOpt = elogioService.findById(id);
 
-        return elogioOpt.map(elogio ->
-            ResponseEntity.ok(new ElogioResponseDto("Elogio encontrado com sucesso.", elogio))
+        if (elogioOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ElogioResponseDto("Elogio não encontrado.", null));
+        }
 
-        ).orElseGet(() ->
-            ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ElogioResponseDto("Elogio não encontrado.", null))
-        );
+        return ResponseEntity.status(HttpStatus.OK).body(new ElogioResponseDto("Elogio encontrado com sucesso.", 
+        elogioOpt.get()));
     }
+
 
 
     @Operation(summary = "Atualizar um elogio", description = "Atualiza os dados de um elogio específico.")
     @ApiResponses(value = {
-    @ApiResponse(responseCode = "200", description = "Elogio atualizado com sucesso"),
-    @ApiResponse(responseCode = "404", description = "Elogio não encontrado para atualizar.")})
+        @ApiResponse(responseCode = "200", description = "Elogio atualizado com sucesso"),
+        @ApiResponse(responseCode = "404", description = "Elogio não encontrado para atualizar.")})
     @PutMapping("/{id}")
-    public ResponseEntity<ElogioResponseDto> updateElogio(@PathVariable UUID id, @RequestBody ElogioRequestDto elogioDTO) {
+    public ResponseEntity<ElogioResponseDto> updateElogio(@PathVariable UUID id,  
+                                                          @RequestBody ElogioRequestDto elogioDTO) {
+    
         Elogio elogioAtualizado = elogioService.updateElogio(id, elogioDTO);
-
         if (elogioAtualizado == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new ElogioResponseDto("Elogio não encontrado para atualizar.", null));
         }
         return ResponseEntity.status(HttpStatus.OK)
             .body(new ElogioResponseDto("Elogio atualizado com sucesso.", elogioAtualizado));
-            
+                   
     }
 
 
     @Operation(summary = "Deletar um elogio", description = "Remove um elogio pelo seu ID.")
-    @ApiResponse(responseCode = "200", description = "Elogio deletado com sucesso.")
+        @ApiResponse(responseCode = "200", description = "Elogio deletado com sucesso.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ElogioResponseDto> deleteElogio(@PathVariable UUID id) {
+    public ResponseEntity<ElogioResponseDto> deleteElogioById(@PathVariable UUID id) {
+
         try {
             elogioService.deleteElogioByID(id);
             return ResponseEntity.ok(new ElogioResponseDto("Elogio deletado com sucesso.", null));
@@ -118,6 +126,7 @@ public class ElogioController {
                 .body(new ElogioResponseDto(e.getMessage(), null));
         }
     }
+
     
 }
 

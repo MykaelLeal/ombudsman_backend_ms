@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import com.ms.user_service.security.auth.UserAuthenticationFilter;
 
 
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
@@ -34,38 +35,42 @@ public class SecurityConfiguration {
         // Swagger
         "/v3/api-docs/**",
         "/swagger-ui/**",
-        "/swagger-ui.html"
+        "/swagger-ui.html",
+
+        // Elogios
+        "/elogios/",               // Listar elogios (GET)
+        "/elogios/create",        // Criar elogio (POST)
+        "/elogios/*",            // Buscar elogio por ID (GET)
+        "/elogios/*",           // Atualizar elogio (PATCH)
+        "/elogios/*",          // Deletar elogio (DELETE)
+
+        // Sugestões
+        "/sugestoes/",             // Listar sugestões (GET)
+        "/sugestoes/create",      // Criar sugestão (POST)
+        "/sugestoes/*",          // Buscar sugestão por ID (GET)
+        "/sugestoes/*",         // Atualizar sugestão (PATCH)
+        "/sugestoes/*",        // Deletar sugestão (DELETE)
+
+        // Reclamações
+        "/reclamacoes/",             // Listar reclamações (GET)
+        "/reclamacoes/create",      // Criar reclamação (POST)
+        "/reclamacoes/*",          // Buscar reclamação por ID (GET)
+        "/reclamacoes/*",         // Atualizar reclamação (PATCH)
+        "/reclamacoes/*",        // Deletar reclamação (DELETE)
+    
+
+
+
 
                      
     };
 
+
    // Endpoints que requerem autenticação para serem acessados (usuário logado)
    public static final String[] ENDPOINTS_WITH_AUTHENTICATION_REQUIRED = {
 
-    // Elogios
-    "/elogios/",               // Listar elogios (GET)
-    "/elogios/create",        // Criar elogio (POST)
-    "/elogios/*",            // Buscar elogio por ID (GET)
-    "/elogios/*",           // Atualizar elogio (PATCH)
-    "/elogios/*",          // Deletar elogio (DELETE)
-
-    // Sugestões
-    "/sugestoes/",             // Listar sugestões (GET)
-    "/sugestoes/create",      // Criar sugestão (POST)
-    "/sugestoes/*",          // Buscar sugestão por ID (GET)
-    "/sugestoes/*",         // Atualizar sugestão (PATCH)
-    "/sugestoes/*",        // Deletar sugestão (DELETE)
-
-    // Reclamações
-    "/reclamacoes/",             // Listar reclamações (GET)
-    "/reclamacoes/create",      // Criar reclamação (POST)
-    "/reclamacoes/*",          // Buscar reclamação por ID (GET)
-    "/reclamacoes/*",         // Atualizar reclamação (PATCH)
-    "/reclamacoes/*",        // Deletar reclamação (DELETE)
-};
-
-
-
+   };
+   
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.csrf(csrf -> csrf.disable()) // Desativa a proteção contra CSRF

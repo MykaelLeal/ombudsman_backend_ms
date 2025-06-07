@@ -10,10 +10,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.ms.user_service.entitie.User;
-import com.ms.user_service.repository.UserRepository;
 import com.ms.user_service.security.config.SecurityConfiguration;
 import com.ms.user_service.security.userdetails.UserDetailsImpl;
+
+import com.ms.user_service.entitie.User;
+import com.ms.user_service.repository.UserRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

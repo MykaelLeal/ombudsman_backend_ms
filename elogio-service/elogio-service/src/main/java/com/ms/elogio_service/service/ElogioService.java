@@ -30,6 +30,7 @@ public class ElogioService {
         elogio.setTitulo(elogioDto.titulo());
         elogio.setDescricao(elogioDto.descricao());
 
+
         return elogioRepository.save(elogio);
     }
 
@@ -42,15 +43,8 @@ public class ElogioService {
 
     // Método responsável por buscar elogio por ID
     public Optional<Elogio> findById(UUID id) {
-       return elogioRepository.findById(id);
+        return elogioRepository.findById(id);
 
-    }
-
-
-    // Método responsável por salvar um elogio
-    @Transactional
-    public Elogio salvar(Elogio elogio) {
-        return elogioRepository.save(elogio);
     }
 
 
@@ -70,7 +64,7 @@ public class ElogioService {
     // Deletar elogio por ID
     @Transactional
     public void deleteElogioByID(UUID id) {
-        Elogio elogio = elogioRepository.findById(id)
+         Elogio elogio = elogioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Elogio não encontrado."));
 
         elogioRepository.delete(elogio);

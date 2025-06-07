@@ -58,7 +58,7 @@ public class UserController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso."),
         @ApiResponse(responseCode = "400", description = "Dados inválidos.")})
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<ResponseDto<User>> createUser(@RequestBody @Valid UserRecordDto userRecordDto) {
         User createdUser = userService.createUser(userRecordDto);
 
